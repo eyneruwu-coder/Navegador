@@ -2,66 +2,57 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lector QR</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Navegador Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        win: {
+                            blue: '#0078d4',
+                            lightBlue: '#e1f0fa',
+                            link: '#1a0dab',
+                            url: '#006621',
+                        },
+                    },
+                },
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="estilos.css">
 </head>
-<body>
-    <div class="contenedor">
-        <header>
-            <h1>📷 Lector QR</h1>
-            <p class="subtitulo">Escanea códigos QR con tu cámara</p>
-        </header>
-
-        <!-- Área de escaneo -->
-        <div class="caja-escaner">
-            <video id="camara" autoplay playsinline></video>
-            <canvas id="lienzo" class="oculto"></canvas>
-            <div class="marco-guia" id="marcoGuia">
-                <div class="esquina sup-izq"></div>
-                <div class="esquina sup-der"></div>
-                <div class="esquina inf-izq"></div>
-                <div class="esquina inf-der"></div>
-            </div>
-            <div class="estado" id="estado">Iniciando cámara...</div>
+<body class="bg-gray-50 select-none">
+    <div class="w-full h-full flex flex-col glass">
+        <!-- Barra de navegación -->
+        <div class="flex gap-2 p-2 border-b flex-wrap items-center bg-white/80">
+            <button class="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 transition-colors" id="btn-back">
+                ←
+            </button>
+            <button class="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 transition-colors" id="btn-forward">
+                →
+            </button>
+            <button class="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 transition-colors" id="btn-refresh">
+                ↻
+            </button>
+            <input 
+                type="text" 
+                class="flex-1 min-w-[120px] px-2 py-1 border rounded text-sm bg-white/90 focus:border-win-blue" 
+                value="" 
+                id="browser-url"
+                placeholder="Buscar o escribir dirección..."
+            >
+            <button onclick="buscar()" class="px-3 py-1 bg-win-blue text-white rounded text-sm hover:bg-win-blue/90 transition-colors">
+                Ir
+            </button>
         </div>
 
-        <!-- Controles -->
-        <div class="controles">
-            <button id="btnIniciar" class="btn btn-primario">▶ Iniciar Escaneo</button>
-            <button id="btnDetener" class="btn btn-secundario oculto">⏹ Detener</button>
-            <button id="btnCopiar" class="btn oculto">📋 Copiar</button>
-            <button id="btnAbrir" class="btn oculto">🔗 Abrir Enlace</button>
-        </div>
-
-        <!-- Resultado -->
-        <div class="resultado oculto" id="cajaResultado">
-            <h3>✅ Resultado:</h3>
-            <div class="texto-resultado" id="textoResultado"></div>
-        </div>
-
-        <!-- Área carga imagen -->
-        <div class="carga-imagen">
-            <p>O selecciona una imagen:</p>
-            <input type="file" id="entradaImagen" accept="image/*">
-            <label for="entradaImagen" class="btn btn-archivo">📁 Subir Imagen</label>
+        <!-- Área de contenido -->
+        <div id="browser-content" class="flex-1 p-4 overflow-auto bg-white">
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        // Registro del Service Worker para funcionar sin internet
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registro => {
-                        console.log('✅ Service Worker registrado:', registro.scope);
-                    })
-                    .catch(error => {
-                        console.log('⚠️ Error al registrar Service Worker:', error);
-                    });
-            });
-        }
-    </script>
+    <script src="funciones.js"></script>
 </body>
 </html>
